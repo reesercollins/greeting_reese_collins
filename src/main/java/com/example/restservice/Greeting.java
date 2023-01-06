@@ -2,9 +2,13 @@ package com.example.restservice;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "greetings")
+@Getter
+@NoArgsConstructor
 public class Greeting {
 
     @Id
@@ -14,18 +18,6 @@ public class Greeting {
 
     public Greeting(String content) {
         this.content = content;
-    }
-
-    protected Greeting() {
-        // Needed for hibernate
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getContent() {
-        return content;
     }
 
     @Override
