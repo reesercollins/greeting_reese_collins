@@ -1,16 +1,18 @@
 package com.example.restservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
+@RequestMapping("/greeting")
 public class GreetingController {
 
     private static final String template = "Hello, %s";
@@ -22,18 +24,30 @@ public class GreetingController {
         this.greetingRepository = greetingRepository;
     }
 
-    @GetMapping("/greeting")
-    public List<Greeting> getGreetings() {
+    @GetMapping
+    public ResponseEntity<List<Greeting>> getGreetings() {
         List<Greeting> result = new ArrayList<>();
         greetingRepository.findAll().forEach(result::add);
-        return result;
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/greeting")
-    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+    @PostMapping
+    public ResponseEntity<Greeting> greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
         Greeting greeting = new Greeting(String.format(template, name));
         greetingRepository.save(greeting);
-        return greeting;
+        return new ResponseEntity<>(greeting, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<Greeting> editGreeting(@RequestParam(name = "id") long id, @RequestBody GreetingEditRequestModel editRequestModel) {
+        Optional<Greeting> opt_greeting = greetingRepository.findById(id);
+        if (opt_greeting.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        Greeting greeting = opt_greeting.get();
+        greeting.setContent(editRequestModel.getContent());
+        greetingRepository.save(greeting);
+        return new ResponseEntity<>(greeting, HttpStatus.OK);
     }
 
 }
