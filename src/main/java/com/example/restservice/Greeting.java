@@ -6,13 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "greetings")
+@Table(name = "greeting")
 @Getter
 @NoArgsConstructor
 public class Greeting {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "greeting_generator")
+    @SequenceGenerator(name = "greeting_generator", sequenceName = "greeting_seq", allocationSize = 1)
     private long id;
     private String content;
 
