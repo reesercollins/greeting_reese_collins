@@ -1,18 +1,21 @@
 package com.example.restservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.history.Revision;
+import org.springframework.data.history.Revisions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
-@RequestMapping("/greeting")
+@RequestMapping("greeting")
 public class GreetingController {
 
     private static final String template = "Hello, %s";
@@ -48,6 +51,15 @@ public class GreetingController {
         greeting.setContent(editRequestModel.getContent());
         greetingRepository.save(greeting);
         return new ResponseEntity<>(greeting, HttpStatus.OK);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<GreetingRevision>> getHistory(@RequestParam(name = "id") long id) {
+        List<GreetingRevision> result = new ArrayList<>();
+        greetingRepository.findRevisions(id).get().forEach((Revision<Long, Greeting> rev) -> {
+            result.add(new GreetingRevision(rev.getEntity(), rev.getRequiredRevisionNumber(), rev.getMetadata().getRevisionType()));
+        });
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

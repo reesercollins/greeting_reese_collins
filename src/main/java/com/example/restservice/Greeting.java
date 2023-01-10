@@ -1,13 +1,17 @@
 package com.example.restservice;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 @Entity
+@Audited
 @Table(name = "greeting")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Getter
 @NoArgsConstructor
 public class Greeting {
