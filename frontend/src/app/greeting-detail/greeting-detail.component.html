@@ -1,0 +1,12 @@
+<div *ngIf="greeting">
+
+    <h2>Greeting Details</h2>
+    <div><span>id: </span>{{greeting.id}}</div>
+    <div>
+        <label for="greeting-content">Greeting content: </label>
+        <input id="greeting-content" [(ngModel)]="greeting.content" placeholder="content">
+    </div>
+
+    <button type="button" (click)="save()">Save</button>
+
+</div>

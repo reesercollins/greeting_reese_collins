@@ -1,0 +1,19 @@
+<h2>Create New Greeting</h2>
+<div>
+    <label for="name">Who would you like to greet?</label>
+    <br>
+    <input id="name" [(ngModel)]="name" placeholder="name">
+
+    <button type="button" class="add-button" (click)="add(name);name=''">Add</button>
+</div>
+
+<h2>My Greetings</h2>
+<ul class="greetings">
+    <li *ngFor="let greeting of greetings">
+        <button [class.selected]="greeting === selectedGreeting" type="button" (click)="onSelect(greeting)">
+            <span class="badge">{{greeting.id}}</span>
+            <span class="name">{{greeting.content}}</span>
+        </button>
+    </li>
+</ul>
+<app-greeting-detail [greeting]="selectedGreeting"></app-greeting-detail>
