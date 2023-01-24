@@ -38,7 +38,8 @@ public class GreetingController {
     }
 
     @PutMapping
-    public ResponseEntity<Greeting> editGreeting(@RequestParam(name = "id") long id, @RequestBody GreetingEditRequestModel editRequestModel) {
+    public ResponseEntity<Greeting> editGreeting(@RequestParam(name = "id") long id,
+                                                 @RequestBody GreetingEditRequestModel editRequestModel) {
         Optional<Greeting> opt_greeting = greetingRepository.findById(id);
         if (opt_greeting.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -53,7 +54,8 @@ public class GreetingController {
     public ResponseEntity<List<GreetingRevision>> getHistory(@RequestParam(name = "id") long id) {
         List<GreetingRevision> result = new ArrayList<>();
         greetingRepository.findRevisions(id).get().forEach((Revision<Long, Greeting> rev) -> {
-            result.add(new GreetingRevision(rev.getEntity(), rev.getRequiredRevisionNumber(), rev.getMetadata().getRevisionType()));
+            result.add(new GreetingRevision(rev.getEntity(), rev.getRequiredRevisionNumber(),
+                    rev.getMetadata().getRevisionType()));
         });
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
